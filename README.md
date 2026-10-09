@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/badge/Versi%C3%B3n-0.2.0-indigo.svg)](https://github.com/JorgeTrip/scrum)
 [![Guía Scrum](https://img.shields.io/badge/Est%C3%A1ndar-Gu%C3%ADa%20Oficial%202020-blue.svg)](https://scrumguides.org/)
-[![Pruebas](https://img.shields.io/badge/Vitest-37%2F37%20Pasadas-emerald.svg)](https://vitest.dev/)
+[![Pruebas](https://img.shields.io/badge/Vitest-69%2F69%20Pasadas-emerald.svg)](https://vitest.dev/)
 [![Auditoría](https://img.shields.io/badge/SAST%20Audit-100%25%20Aprobado-success.svg)](#)
 [![Institución](https://img.shields.io/badge/UTN%20FRBA-Fines%20Educativos-amber.svg)](https://www.frba.utn.edu.ar/)
 
@@ -51,7 +51,7 @@ El lienzo divide verticalmente el flujo en tres secciones de idéntica altura:
 - **Diseño & UI:** Tailwind CSS v4 con paleta profesional Grises Pro (`bg-[#1C1C1E]`), efectos glassmorphism y diseño responsive estilo Apple.
 - **Motor de Grafos:** `@xyflow/react` (React Flow 12).
 - **Iconografía:** Lucide React.
-- **Testing & Calidad:** Vitest (37 tests unitarios automatizados).
+- **Testing & Calidad:** Vitest (69 tests unitarios automatizados).
 - **Gobernanza de Código:** Estricto cumplimiento de la **Regla de Hierro** (máximo 200 líneas por archivo), SAST sin vulnerabilidades y límites de arquitectura desacoplados.
 
 ---
@@ -88,7 +88,7 @@ npm run dev
 
 ### Comandos de Calidad y Construcción
 ```bash
-npm test         # Ejecuta la suite de 37 pruebas unitarias con Vitest
+npm test         # Ejecuta la suite de 69 pruebas unitarias con Vitest
 npm run build    # Compila TypeScript y empaqueta la versión de producción
 npm run preview  # Previsualiza la compilación localmente
 ```
