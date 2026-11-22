@@ -32,3 +32,28 @@ html.light {
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
+
+@keyframes pulso-ancla-s {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+  42% {
+    transform: scale(1.13);
+    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.34);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.pulso-recepcion-ancla-s {
+  animation: pulso-ancla-s 420ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulso-recepcion-ancla-s {
+    animation: none;
+  }
+}

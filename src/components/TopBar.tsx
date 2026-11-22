@@ -71,6 +71,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           type="button"
           onClick={onAbrirAcercaDe}
+          data-ancla-acerca-de="boton-s"
           title="Acerca del proyecto y la Guía Oficial 2020"
           aria-label="Abrir información del proyecto y Guía Oficial de Scrum 2020"
           className={`${esEntornoTactil ? 'w-11 h-11' : 'w-9 h-9'} rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0`}

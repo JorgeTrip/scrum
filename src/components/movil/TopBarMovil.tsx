@@ -45,6 +45,7 @@ export const TopBarMovil: React.FC<TopBarMovilProps> = ({
           <button
             type="button"
             onClick={onAbrirAcercaDe}
+            data-ancla-acerca-de="boton-s"
             aria-label="Abrir información del proyecto y Guía Oficial de Scrum 2020"
             className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 active:scale-95 transition-transform cursor-pointer shrink-0"
           >
