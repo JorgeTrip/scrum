@@ -1,8 +1,7 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import {
   ReactFlow,
   ReactFlowProvider,
-  useReactFlow,
   ViewportPortal,
   MiniMap,
   Background,
@@ -18,29 +17,52 @@ import { RoleNode } from './nodes/RoleNode';
 import { EventNode } from './nodes/EventNode';
 import { ArtifactNode } from './nodes/ArtifactNode';
 import { AristaDespejada } from './edges/AristaDespejada';
+import { PopoverDetalleArista } from './edges/PopoverDetalleArista';
 import { Swimlanes } from './Swimlanes';
 import { ControlZoomPreciso } from './ControlZoomPreciso';
+import { ControlesLienzoMovil } from './movil/ControlesLienzoMovil';
+import { useDispositivoMovil } from '../hooks/useDispositivoMovil';
 import { useNodosConSnap } from '../hooks/useNodosConSnap';
 import { useArrastreLienzoHorizontal } from '../hooks/useArrastreLienzoHorizontal';
+import { useEnfoqueCamaraFlow } from '../hooks/useEnfoqueCamaraFlow';
 import type { NodoScrum, AristaScrum, DatosNodoScrum } from '../types/scrum';
+import type { TemaVisual } from '../dominio/tiposDominio';
 
 interface FlowCanvasProps {
   nodos: NodoScrum[];
   aristas: AristaScrum[];
   onSeleccionarNodo: (datos: DatosNodoScrum) => void;
   onCerrarTooltip?: () => void;
+  idsNodosFoco?: string[];
+  idsNodosNuevos?: string[];
+  modoActivo?: 'historia' | 'mapa';
+  idAristaInspeccionada?: string | null;
+  onCerrarArista?: () => void;
+  tema?: TemaVisual;
+  nodoEnfocadoExterno?: { id: string; nonce: number } | null;
+  panelHistoriaColapsado?: boolean;
+  hojaInferiorAbierta?: boolean;
 }
 
-/**
- * Lienzo interno interactivo de React Flow.
- * Desplazamiento del fondo restringido exclusivamente al eje horizontal.
- */
 const FlowCanvasInterno: React.FC<FlowCanvasProps> = ({
   nodos,
   aristas,
   onSeleccionarNodo,
-  onCerrarTooltip
+  onCerrarTooltip,
+  idsNodosFoco = [],
+  idsNodosNuevos = [],
+  modoActivo = 'historia',
+  idAristaInspeccionada = null,
+  onCerrarArista,
+  tema = 'dark',
+  nodoEnfocadoExterno = null,
+  panelHistoriaColapsado = false,
+  hojaInferiorAbierta = false
 }) => {
+  const { esMovil, esLandscapeCompacto, esPantallaPequena, esTactil } = useDispositivoMovil();
+  const esEntornoTactil = esPantallaPequena || esTactil;
+  const [permitirMoverNodos, setPermitirMoverNodos] = useState(false);
+
   const {
     nodosInternos,
     guiaSnapY,
@@ -49,29 +71,25 @@ const FlowCanvasInterno: React.FC<FlowCanvasProps> = ({
   } = useNodosConSnap(nodos);
 
   const {
+    refContenedor,
     estaArrastrandoFondo,
     alIniciarArrastre,
     alMoverLienzo,
     alFinalizarArrastre
-  } = useArrastreLienzoHorizontal();
+  } = useArrastreLienzoHorizontal(esEntornoTactil);
 
-  const { fitView } = useReactFlow();
-
-  // Ajuste automático reactivo para monitores más pequeños o cambio de tamaño de ventana
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const alRedimensionar = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        fitView({ padding: 0.15, duration: 250 });
-      }, 100);
-    };
-    window.addEventListener('resize', alRedimensionar);
-    return () => {
-      window.removeEventListener('resize', alRedimensionar);
-      clearTimeout(timer);
-    };
-  }, [fitView]);
+  const { encuadrarMapaCompleto } = useEnfoqueCamaraFlow({
+    refContenedor,
+    modoActivo,
+    idsNodosFoco,
+    idsNodosNuevos,
+    nodoEnfocadoExterno,
+    esMovil,
+    esLandscapeCompacto,
+    esPantallaPequena,
+    panelHistoriaColapsado,
+    hojaInferiorAbierta
+  });
 
   const nodeTypes = useMemo<NodeTypes>(() => ({
     roleNode: RoleNode as unknown as NodeTypes['roleNode'],
@@ -80,32 +98,44 @@ const FlowCanvasInterno: React.FC<FlowCanvasProps> = ({
   }), []);
 
   const edgeTypes = useMemo<EdgeTypes>(() => ({ despejada: AristaDespejada }), []);
+
   const manejarClickEnNodo: NodeMouseHandler<NodoScrum> = useCallback(
-    (_, nodo) => onSeleccionarNodo(nodo.data),
-    [onSeleccionarNodo]
+    (_, nodo) => {
+      onCerrarArista?.();
+      onSeleccionarNodo(nodo.data);
+    },
+    [onSeleccionarNodo, onCerrarArista]
   );
+
+  const manejarClickLienzo = useCallback(() => {
+    onCerrarTooltip?.();
+    onCerrarArista?.();
+  }, [onCerrarTooltip, onCerrarArista]);
 
   return (
     <div
+      ref={refContenedor}
       onPointerDown={alIniciarArrastre}
       onPointerMove={alMoverLienzo}
       onPointerUp={alFinalizarArrastre}
       onPointerCancel={alFinalizarArrastre}
-      className={`relative w-full h-full bg-[#121214] overflow-hidden ${
+      className={`relative w-full h-full bg-[var(--bg-lienzo)] overflow-hidden touch-none ${
         estaArrastrandoFondo ? 'cursor-grabbing select-none' : 'cursor-grab'
       }`}
     >
-      {/* Botón flotante para restablecer posiciones si el usuario desea reiniciar el diseño */}
-      <div className="absolute right-4 top-4 z-20">
-        <button
-          onClick={restablecerPosicionesOriginales}
-          title="Restablecer posiciones predeterminadas de nodos y etiquetas"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1C1C1E]/90 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-300 hover:text-white text-xs font-medium shadow-lg backdrop-blur-md transition-all active:scale-95"
-        >
-          <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
-          <span>Restablecer mapa</span>
-        </button>
-      </div>
+      {!esPantallaPequena && (
+        <div className="absolute right-4 top-4 z-20">
+          <button
+            type="button"
+            onClick={restablecerPosicionesOriginales}
+            title="Restablecer posiciones predeterminadas de nodos y etiquetas"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-panel)]/95 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/80 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white text-xs font-medium shadow-lg backdrop-blur-md transition-all active:scale-95 cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+            <span className="hidden sm:inline">Restablecer mapa</span>
+          </button>
+        </div>
+      )}
 
       <ReactFlow<NodoScrum>
         nodes={nodosInternos}
@@ -114,51 +144,50 @@ const FlowCanvasInterno: React.FC<FlowCanvasProps> = ({
         edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onNodeClick={manejarClickEnNodo}
-        onPaneClick={onCerrarTooltip}
-        nodesDraggable={true}
-        elementsSelectable={true}
+        onPaneClick={manejarClickLienzo}
+        nodesDraggable={esEntornoTactil ? permitirMoverNodos : true}
+        elementsSelectable
         panOnDrag={false}
-        fitView
-        fitViewOptions={{ padding: 0.15, duration: 600 }}
-        minZoom={0.25}
+        minZoom={esPantallaPequena ? 0.1 : 0.2}
         maxZoom={2.2}
         proOptions={{ hideAttribution: true }}
       >
-        <Background variant={BackgroundVariant.Dots} gap={24} size={1.5} color="#27272a" />
-        <Swimlanes />
+        <Background variant={BackgroundVariant.Dots} gap={24} size={1.5} color={tema === 'dark' ? '#27272a' : '#d4d4d8'} />
+        <Swimlanes tema={tema} />
 
-        {/* Línea guía magnética visual de encaje vertical ("Snap") en coordenadas del flujo */}
         <ViewportPortal>
           {guiaSnapY !== null && (
             <div
-              style={{
-                position: 'absolute',
-                top: `${guiaSnapY}px`,
-                left: '-10000px',
-                width: '20000px',
-                pointerEvents: 'none',
-                zIndex: 1000
-              }}
+              style={{ position: 'absolute', top: `${guiaSnapY}px`, left: '-10000px', width: '20000px', pointerEvents: 'none', zIndex: 1000 }}
               className="border-t-2 border-dashed border-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.9)]"
             />
           )}
         </ViewportPortal>
 
-        <ControlZoomPreciso />
+        {esPantallaPequena ? (
+          <ControlesLienzoMovil
+            permitirMoverNodos={permitirMoverNodos}
+            onAlternarMoverNodos={() => setPermitirMoverNodos((p) => !p)}
+            onRestablecerPosiciones={restablecerPosicionesOriginales}
+            onEncuadrarTodo={() => encuadrarMapaCompleto()}
+          />
+        ) : (
+          <ControlZoomPreciso onEncuadrarTodo={() => encuadrarMapaCompleto()} />
+        )}
 
-        <MiniMap<NodoScrum>
-          nodeStrokeWidth={3}
-          zoomable
-          pannable
-          className="!bg-[#1C1C1E]/95 !border !border-zinc-800 !rounded-2xl !shadow-xl !backdrop-blur-md"
-          nodeColor={(n) => {
-            if (n.data?.category === 'role') return '#F59E0B';
-            if (n.data?.category === 'event') return '#6366F1';
-            return '#10B981';
-          }}
-          maskColor="rgba(18, 18, 20, 0.7)"
-        />
+        {!esPantallaPequena && (
+          <MiniMap<NodoScrum>
+            nodeStrokeWidth={3}
+            zoomable
+            pannable
+            className="!hidden sm:!block !bg-[var(--bg-panel)]/95 !border !border-zinc-300 dark:!border-zinc-800 !rounded-2xl !shadow-xl !backdrop-blur-md"
+            nodeColor={(n) => (n.data?.category === 'role' ? '#F59E0B' : n.data?.category === 'event' ? '#6366F1' : '#10B981')}
+            maskColor={tema === 'dark' ? 'rgba(18, 18, 20, 0.7)' : 'rgba(245, 245, 247, 0.7)'}
+          />
+        )}
       </ReactFlow>
+
+      {!esPantallaPequena && <PopoverDetalleArista idArista={idAristaInspeccionada} alCerrar={() => onCerrarArista?.()} />}
     </div>
   );
 };

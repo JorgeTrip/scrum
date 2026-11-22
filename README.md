@@ -4,9 +4,10 @@
 [![Guía Scrum](https://img.shields.io/badge/Est%C3%A1ndar-Gu%C3%ADa%20Oficial%202020-blue.svg)](https://scrumguides.org/)
 [![Pruebas](https://img.shields.io/badge/Vitest-69%2F69%20Pasadas-emerald.svg)](https://vitest.dev/)
 [![Auditoría](https://img.shields.io/badge/SAST%20Audit-100%25%20Aprobado-success.svg)](#)
-[![Institución](https://img.shields.io/badge/UTN%20FRBA-Fines%20Educativos-amber.svg)](https://www.frba.utn.edu.ar/)
+[![Estudiante](https://img.shields.io/badge/Estudiante%20Ing.%20en%20Sistemas-UTN%20FRBA-amber.svg)](https://www.frba.utn.edu.ar/)
+[![Estado](https://img.shields.io/badge/Estado-En%20mejora%20continua-teal.svg)](#)
 
-Plataforma web de ingeniería pedagógica para la enseñanza interactiva y navegación tridimensional del marco de trabajo **Scrum**, fundamentada estrictamente en la **Guía Oficial de Scrum 2020** de Ken Schwaber y Jeff Sutherland.
+Plataforma web en constante mejora para la enseñanza interactiva y navegación tridimensional del marco de trabajo **Scrum**, fundamentada estrictamente en la **Guía Oficial de Scrum 2020** de Ken Schwaber y Jeff Sutherland.
 
 ---
 
@@ -40,7 +41,7 @@ El lienzo divide verticalmente el flujo en tres secciones de idéntica altura:
 - **Relaciones Elásticas e Inteligentes:** Conexiones directas, bucles de retroalimentación empírica punteados y flujo de valor animado con etiquetas reposicionables.
 - **Tooltips Enriquecidos con Aislamiento de Scroll:** Despliegan responsabilidades, alias (AKAs) y fundamentos teóricos sin interferir con la navegación del lienzo.
 - **Persistencia de Posiciones:** Guardado automático en `localStorage` de las coordenadas personalizadas de nodos y etiquetas arrastrados por el usuario.
-- **Modal "Acerca de":** Justificación teórica del estándar 2020, autoría institucional y copyright.
+- **Modal "Acerca de":** Justificación teórica del estándar 2020, autoría del proyecto y copyright.
 - **Historial de Cambios (Changelog):** Visor con filtrado semántico (`feat`, `fix`, `breaking`) y enlaces directos a los commits del repositorio.
 
 ---
@@ -97,7 +98,7 @@ npm run preview  # Previsualiza la compilación localmente
 
 ## 👥 Autoría y Derechos
 
-- **Autor:** **Jorge O. Tripodi**
-- **Institución:** Universidad Tecnológica Nacional – Facultad Regional Buenos Aires (**UTN FRBA**)
-- **Finalidad:** Proyecto desarrollado exclusivamente con fines formativos, pedagógicos y de divulgación académica.
+- **Autor:** **Jorge O. Tripodi** • Analista Desarrollador Universitario de Sistemas
+- **Formación en curso:** Estudiante de Ingeniería en Sistemas de Información | UTN FRBA (Universidad Tecnológica Nacional – Facultad Regional Buenos Aires)
+- **Finalidad:** Proyecto personal en constante mejora, desarrollado con fines formativos y de estudio; no constituye material oficial ni utilizado formalmente por la universidad.
 - **Copyright:** © 2026 Jorge O. Tripodi. Todos los derechos reservados.

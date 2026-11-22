@@ -1,6 +1,6 @@
 /**
- * Definición de los Roles oficiales de Scrum (Personas).
- * Carril Superior: y = 60
+ * Definición de los Roles / Accountabilities oficiales de Scrum (Guía 2020).
+ * Carril Superior: y = -53
  */
 
 import type { NodoScrum } from '../types/scrum';
@@ -14,17 +14,17 @@ export const nodosRoles: NodoScrum[] = [
       id: 'role-product-owner',
       label: 'Product Owner',
       category: 'role',
-      summary: 'Responsable de maximizar el valor del producto y optimizar la gestión del Product Backlog.',
+      summary: 'Responsable único (accountability) de maximizar el valor del producto y optimizar la gestión del Product Backlog.',
       akas: ['PO', 'Dueño del Producto', 'Responsable del Producto'],
       details: {
         responsibilities: [
           'Desarrollar y comunicar explícitamente el Product Goal (Objetivo del Producto).',
-          'Crear y ordenar de forma transparente los elementos del Product Backlog.',
-          'Garantizar que el Product Backlog sea visible, claro y entendido por todos los interesados.',
-          'Tomar decisiones finales sobre el alcance del producto y representar la voz de los clientes.'
+          'Crear, comunicar claramente y ordenar de forma transparente los elementos del Product Backlog.',
+          'Garantizar que el Product Backlog sea visible, transparente y entendido por todos.',
+          'Actuar como una sola persona (no un comité) con autoridad exclusiva para cancelar un Sprint si el objetivo queda obsoleto.'
         ],
         theoreticalBasis:
-          'Para que los Product Owners tengan éxito, toda la organización debe respetar sus decisiones. Estas decisiones se reflejan en el contenido y la priorización del Product Backlog.'
+          'El Product Owner es una persona, no un comité. Para que tenga éxito, toda la organización debe respetar sus decisiones, las cuales se reflejan en el contenido y orden del Product Backlog.'
       }
     }
   },
@@ -36,17 +36,17 @@ export const nodosRoles: NodoScrum[] = [
       id: 'role-developers',
       label: 'Developers',
       category: 'role',
-      summary: 'Profesionales multidisciplinarios comprometidos con crear cualquier aspecto de un incremento utilizable en cada Sprint.',
-      akas: ['Dev Team', 'Equipo de Desarrollo', 'Desarrolladores'],
+      summary: 'Profesionales multidisciplinarios del Scrum Team comprometidos con crear cualquier aspecto de un Incremento utilizable cada Sprint.',
+      akas: ['Desarrolladores', 'Dev Team (deprecado 2017)', 'Equipo de Desarrollo (deprecado 2017)'],
       details: {
         responsibilities: [
-          'Crear un plan para el Sprint (el Sprint Backlog).',
+          'Crear el plan para el Sprint (el Sprint Backlog) y realizar el dimensionamiento técnico.',
           'Infundir calidad adhiriéndose estrictamente a la Definition of Done.',
           'Adaptar diariamente su plan hacia el Sprint Goal durante la Daily Scrum.',
-          'Responsabilizarse mutuamente como profesionales de ingeniería sin jerarquías internas.'
+          'Responsabilizarse mutuamente como profesionales autogestionados sin subequipos ni jerarquías internas.'
         ],
         theoreticalBasis:
-          'Las habilidades específicas que necesitan los Developers suelen ser amplias y varían con el ámbito del trabajo. Siempre son responsables directos de la calidad y de la estimación del esfuerzo técnico.'
+          'La Guía 2020 eliminó el subequipo «Development Team» integrando un único Scrum Team sin jerarquías. Los Developers abarcan todas las habilidades necesarias para crear valor cada Sprint.'
       }
     }
   },
@@ -58,17 +58,17 @@ export const nodosRoles: NodoScrum[] = [
       id: 'role-scrum-master',
       label: 'Scrum Master',
       category: 'role',
-      summary: 'Líder servicial y facilitador responsable de instaurar Scrum y promover la efectividad del Scrum Team.',
-      akas: ['SM', 'Facilitador Ágil', 'Líder Servidor (Servant Leader)'],
+      summary: 'Verdadero líder que sirve al Scrum Team y a la organización, responsable de instaurar Scrum y promover su efectividad.',
+      akas: ['SM', 'Facilitador Ágil', 'True Leader Who Serves (ex Servant Leader 2017)'],
       details: {
         responsibilities: [
-          'Guiar a los miembros del equipo en autogestión y multidisciplinariedad.',
-          'Ayudar a enfocarse en la creación de incrementos de alto valor que cumplan la Definition of Done.',
-          'Procurar la eliminación de impedimentos que frenen el progreso del Scrum Team.',
-          'Facilitar los eventos de Scrum según se requiera o solicite, asegurando que sean positivos y productivos.'
+          'Al Scrum Team: guiar en autogestión, multidisciplinariedad, enfoque en Incrementos de alto valor y eliminación de impedimentos.',
+          'Al Product Owner: facilitar técnicas para definir el Product Goal y gestionar empíricamente el Product Backlog.',
+          'A la Organización: liderar y capacitar la adopción de Scrum y derribar barreras entre stakeholders y equipos.',
+          'Asegurar que todos los eventos de Scrum ocurran y sean positivos, productivos y dentro de su timebox.'
         ],
         theoreticalBasis:
-          'El Scrum Master sirve al Scrum Team, al Product Owner y a toda la organización, liderando la adopción ágil, el empirismo y la mejora continua.'
+          'Los Scrum Masters son verdaderos líderes que sirven al Scrum Team y a la organización en general, promoviendo la teoría y práctica del empirismo definida en la Guía de Scrum 2020.'
       }
     }
   }

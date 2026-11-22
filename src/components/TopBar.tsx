@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Search, X, Users, Calendar, Layers, Sparkles, BookOpen, Compass } from 'lucide-react';
+import React from 'react';
+import { BookOpen, Compass, FlaskConical } from 'lucide-react';
 import type { CategoriaScrum } from '../types/scrum';
-import { ModalAcercaDe } from './ModalAcercaDe';
+import type { TemaVisual } from '../dominio/tiposDominio';
+import { BarraFiltrosTopBar } from './BarraFiltrosTopBar';
+import { TopBarMovil } from './movil/TopBarMovil';
 
 interface TopBarProps {
   busqueda: string;
@@ -11,10 +13,18 @@ interface TopBarProps {
   onResetFiltros: () => void;
   modoActivo: 'historia' | 'mapa';
   onCambiarModo: (modo: 'historia' | 'mapa') => void;
+  onAbrirLaboratorio?: () => void;
+  onAbrirAcercaDe: () => void;
+  tema?: TemaVisual;
+  onAlternarTema?: () => void;
+  esMovil?: boolean;
+  esEntornoTactil?: boolean;
+  vistaMapaMovil?: 'mapa' | 'lista';
+  onCambiarVistaMapaMovil?: (vista: 'mapa' | 'lista') => void;
 }
 
 /**
- * Barra superior con selector de modo (Historia / Mapa), buscador y filtros.
+ * Barra superior adaptativa con marca, selector de modo, Laboratorio Scrum y controles de filtrado.
  */
 export const TopBar: React.FC<TopBarProps> = ({
   busqueda,
@@ -23,133 +33,127 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSeleccionCategoria,
   onResetFiltros,
   modoActivo,
-  onCambiarModo
+  onCambiarModo,
+  onAbrirLaboratorio,
+  onAbrirAcercaDe,
+  tema = 'dark',
+  onAlternarTema,
+  esMovil = false,
+  esEntornoTactil = false,
+  vistaMapaMovil = 'mapa',
+  onCambiarVistaMapaMovil
 }) => {
-  const [modalAbierto, setModalAbierto] = useState(false);
+  const claseTactil = esEntornoTactil ? 'min-w-[44px] min-h-[44px]' : '';
 
-  const filtros: { id: CategoriaScrum | 'all'; label: string; icono: React.ReactNode }[] = [
-    { id: 'all', label: 'Todos', icono: <Sparkles className="w-3.5 h-3.5" /> },
-    { id: 'role', label: 'Roles', icono: <Users className="w-3.5 h-3.5" /> },
-    { id: 'event', label: 'Eventos', icono: <Calendar className="w-3.5 h-3.5" /> },
-    { id: 'artifact', label: 'Artefactos', icono: <Layers className="w-3.5 h-3.5" /> }
-  ];
+  if (esMovil) {
+    return (
+      <header className="px-3 py-2 bg-[var(--bg-panel)]/95 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800/80 z-20 shadow-md shrink-0">
+        <TopBarMovil
+          busqueda={busqueda}
+          onCambioBusqueda={onCambioBusqueda}
+          categoriaSeleccionada={categoriaSeleccionada}
+          onSeleccionCategoria={onSeleccionCategoria}
+          onResetFiltros={onResetFiltros}
+          modoActivo={modoActivo}
+          vistaMapaMovil={vistaMapaMovil}
+          onCambiarVistaMapaMovil={onCambiarVistaMapaMovil}
+          tema={tema}
+          onAlternarTema={onAlternarTema}
+          onAbrirAcercaDe={onAbrirAcercaDe}
+        />
+      </header>
+    );
+  }
 
   return (
-    <header className="h-16 px-6 bg-[#1C1C1E]/95 backdrop-blur-xl border-b border-zinc-800/80 flex items-center justify-between z-20 shadow-md">
-      {/* Logotipo y Título interactivo */}
-      <div className="flex items-center gap-3">
+    <header className="min-h-16 px-3 md:px-6 py-2 bg-[var(--bg-panel)]/95 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-2.5 z-20 shadow-md">
+      <div className="flex items-center gap-2.5">
         <button
           type="button"
-          onClick={() => setModalAbierto(true)}
-          title="Acerca del proyecto y la Guía Oficial 2020 (clic para ver detalles)"
+          onClick={onAbrirAcercaDe}
+          title="Acerca del proyecto y la Guía Oficial 2020"
           aria-label="Abrir información del proyecto y Guía Oficial de Scrum 2020"
-          className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+          className={`${esEntornoTactil ? 'w-11 h-11' : 'w-9 h-9'} rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0`}
         >
           <span className="font-black text-white text-base group-hover:rotate-6 transition-transform">S</span>
         </button>
         <div>
-          <h1 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
-            Flujo Metodológico Scrum
+          <h1 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+            <span>
+              <span className="hidden lg:inline">Flujo Metodológico </span>Scrum
+            </span>
             <button
               type="button"
-              onClick={() => setModalAbierto(true)}
-              title="¿Por qué Guía 2020? Clic para ver fundamentos"
-              className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition-colors cursor-pointer"
+              onClick={onAbrirAcercaDe}
+              title="¿Por qué Guía 2020? Clic para ver fuentes oficiales"
+              aria-label="Ver fuentes oficiales Guía 2020"
+              className={`${esEntornoTactil ? 'min-h-[44px] inline-flex items-center px-1' : ''} cursor-pointer`}
             >
-              Guía 2020
+              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-700/60 transition-colors">
+                Guía 2020
+              </span>
             </button>
           </h1>
-          <p className="text-[11px] text-zinc-400">
+          <p className="text-[11px] text-zinc-600 dark:text-zinc-400 hidden lg:block">
             Estructura tridimensional: Personas, Eventos y Documentos
           </p>
         </div>
       </div>
 
-      {/* Controles Centrales: Selector de Modo (Historia vs Mapa Libre) */}
-      <div className="flex items-center p-1 bg-zinc-900/90 rounded-2xl border border-zinc-800 shadow-inner">
-        <button
-          onClick={() => onCambiarModo('historia')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-            modoActivo === 'historia'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/30'
-              : 'text-zinc-400 hover:text-zinc-200'
-          }`}
-        >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>Modo Historia (Paso a Paso)</span>
-        </button>
-        <button
-          onClick={() => onCambiarModo('mapa')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-            modoActivo === 'mapa'
-              ? 'bg-zinc-800 text-white shadow-md border border-zinc-700'
-              : 'text-zinc-400 hover:text-zinc-200'
-          }`}
-        >
-          <Compass className="w-3.5 h-3.5" />
-          <span>Mapa Libre</span>
-        </button>
-      </div>
-
-      {/* Controles de Búsqueda y Filtros */}
-      <div className="flex items-center gap-3">
-        {/* Input de Búsqueda */}
-        <div className="relative w-56 md:w-64">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            value={busqueda}
-            onChange={(e) => onCambioBusqueda(e.target.value)}
-            placeholder="Buscar concepto..."
-            className="w-full h-9 pl-9 pr-8 bg-zinc-900/90 hover:bg-zinc-900 focus:bg-zinc-950 text-xs text-white rounded-xl border border-zinc-700/70 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all placeholder:text-zinc-500"
-          />
-          {busqueda && (
-            <button
-              onClick={() => onCambioBusqueda('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center p-1 bg-zinc-100 dark:bg-zinc-900/90 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
+          <button
+            type="button"
+            onClick={() => onCambiarModo('historia')}
+            aria-label="Cambiar a Modo Historia"
+            className={`flex items-center gap-1.5 px-2.5 md:px-3.5 py-1.5 ${claseTactil} rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              modoActivo === 'historia'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/30'
+                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Modo Historia</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onCambiarModo('mapa')}
+            aria-label="Cambiar a Mapa Libre"
+            className={`flex items-center gap-1.5 px-2.5 md:px-3.5 py-1.5 ${claseTactil} rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              modoActivo === 'mapa'
+                ? 'bg-zinc-800 text-white shadow-md border border-zinc-700'
+                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+            }`}
+          >
+            <Compass className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Mapa Libre</span>
+          </button>
         </div>
 
-        {/* Filtros por Categoría (en modo Mapa) */}
-        {modoActivo === 'mapa' && (
-          <div className="flex items-center p-1 bg-zinc-900/80 rounded-xl border border-zinc-800">
-            {filtros.map((f) => {
-              const activo = categoriaSeleccionada === f.id;
-              return (
-                <button
-                  key={f.id}
-                  onClick={() => onSeleccionCategoria(f.id)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                    activo
-                      ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
-                  }`}
-                >
-                  {f.icono}
-                  <span>{f.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {(busqueda || (modoActivo === 'mapa' && categoriaSeleccionada !== 'all')) && (
+        {onAbrirLaboratorio && (
           <button
-            onClick={onResetFiltros}
-            className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors font-medium px-1"
+            type="button"
+            onClick={onAbrirLaboratorio}
+            title="Abrir Calculadora Timebox, Pilares, Comparativa y Quiz"
+            className={`flex items-center gap-1.5 px-3 py-1.5 ${claseTactil} rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border border-amber-500/35 text-xs font-bold transition-all cursor-pointer active:scale-95`}
           >
-            Limpiar
+            <FlaskConical className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden lg:inline">Laboratorio Scrum</span>
+            <span className="lg:hidden">Lab</span>
           </button>
         )}
       </div>
 
-      {/* Modal explicativo del marco metodológico y autoría */}
-      <ModalAcercaDe
-        abierto={modalAbierto}
-        alCerrar={() => setModalAbierto(false)}
+      <BarraFiltrosTopBar
+        busqueda={busqueda}
+        onCambioBusqueda={onCambioBusqueda}
+        categoriaSeleccionada={categoriaSeleccionada}
+        onSeleccionCategoria={onSeleccionCategoria}
+        onResetFiltros={onResetFiltros}
+        modoActivo={modoActivo}
+        tema={tema}
+        onAlternarTema={onAlternarTema}
+        esEntornoTactil={esEntornoTactil}
       />
     </header>
   );

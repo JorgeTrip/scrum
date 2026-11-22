@@ -3,6 +3,14 @@ import type { EntradaHistorial } from '../types/historial';
 import { historialCambiosFallback } from '../data/historialCambiosFallback';
 
 /**
+ * Resuelve la ruta del JSON estático respetando despliegues bajo subrutas (ej. GitHub Pages).
+ */
+export function resolverUrlHistorial(baseUrl = './'): string {
+  const baseLimpia = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${baseLimpia}historial-cambios.json`;
+}
+
+/**
  * Determina el tipo de cambio a partir del prefijo semántico del commit.
  */
 function clasificarTipoCommit(mensaje: string): EntradaHistorial['tipo'] {
@@ -15,8 +23,7 @@ function clasificarTipoCommit(mensaje: string): EntradaHistorial['tipo'] {
 
 /**
  * Hook para obtener el registro histórico de cambios del repositorio.
- * Intenta cargar desde el endpoint estático /historial-cambios.json,
- * con fallback inteligente a datos compilados si no hay conexión externa.
+ * Carga relativa a BASE_URL con respaldo compilado ante fallos de red.
  */
 export function useHistorialCambios() {
   const [historial, setHistorial] = useState<EntradaHistorial[]>(historialCambiosFallback);
@@ -30,7 +37,8 @@ export function useHistorialCambios() {
       setCargando(true);
       setError(null);
       try {
-        const respuesta = await fetch('/historial-cambios.json', {
+        const url = resolverUrlHistorial(import.meta.env.BASE_URL ?? './');
+        const respuesta = await fetch(url, {
           cache: 'no-cache',
           headers: { Accept: 'application/json' }
         });
@@ -48,7 +56,6 @@ export function useHistorialCambios() {
           setHistorial(normalizados);
         }
       } catch (err) {
-        // En caso de fallo o trabajo offline, conservamos de manera resiliente el fallback
         if (!cancelado) {
           setError(err instanceof Error ? err.message : 'Error desconocido al cargar historial');
           setHistorial(historialCambiosFallback);

@@ -12,19 +12,19 @@ export const capitulosHistoriaProductOwner: CapituloHistoria[] = [
     titulo: 'La Visión Estratégica',
     subtitulo: 'Product Owner & Product Vision Board',
     narrativa:
-      'El Product Owner define la brújula estratégica del producto utilizando el Product Vision Board. Responde quién es el público objetivo, qué necesidades críticas insatisfechas se resolverán y cómo la propuesta de valor apoya los objetivos del negocio.',
+      'El Product Owner (una sola persona, no un comité) define la brújula estratégica del producto con el Product Vision Board: público objetivo, necesidades críticas, propuesta de valor diferenciadora y metas del negocio.',
     idsNodosNuevos: ['role-product-owner', 'artifact-vision-board'],
     idsDestacados: ['role-product-owner', 'artifact-vision-board']
   },
   {
     id: 1,
     pasoNumero: 2,
-    titulo: 'Product Goal y Product Backlog',
-    subtitulo: 'La Única Fuente de Trabajo',
+    titulo: 'Discovery, Product Goal y Product Backlog',
+    subtitulo: 'Impact Mapping ➔ Story Map ➔ Backlog',
     narrativa:
-      'Formaliza el Product Goal a largo plazo y desglosa la visión en un Product Backlog transparente y dinámico. Ordena continuamente los elementos según valor, urgencia y dependencias para asegurar el mayor retorno de inversión.',
-    idsNodosNuevos: ['artifact-product-backlog'],
-    idsDestacados: ['role-product-owner', 'artifact-product-backlog']
+      'Traduce la visión en hipótesis medibles (Impact Mapping) y las organiza a lo largo del viaje del usuario (User Story Mapping) antes de formalizar el Product Goal y ordenar el Product Backlog como única fuente de trabajo.',
+    idsNodosNuevos: ['artifact-impact-mapping', 'artifact-user-story-mapping', 'artifact-product-backlog'],
+    idsDestacados: ['role-product-owner', 'artifact-impact-mapping', 'artifact-user-story-mapping', 'artifact-product-backlog']
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ export const capitulosHistoriaProductOwner: CapituloHistoria[] = [
     titulo: 'Alineación en Sprint Planning',
     subtitulo: 'El Foco de Valor para el Sprint',
     narrativa:
-      'Al comenzar el Sprint, el Product Owner presenta el objetivo de negocio prioritario en el Sprint Planning. Colabora activamente con los Developers para seleccionar los elementos del backlog que harán posible un Sprint Goal viable y motivador.',
+      'Al comenzar el Sprint, el Product Owner propone cómo incrementar el valor del producto en el Sprint Planning. Colabora activamente con los Developers para negociar un Sprint Goal viable y motivador.',
     idsNodosNuevos: ['event-sprint-planning'],
     idsDestacados: ['role-product-owner', 'event-sprint-planning']
   },
@@ -42,7 +42,7 @@ export const capitulosHistoriaProductOwner: CapituloHistoria[] = [
     titulo: 'Clarificación y Soporte Continuo',
     subtitulo: 'Colaboración Directa con Developers',
     narrativa:
-      'Durante todo el ciclo del Sprint, el Product Owner acompaña a los Developers. Está disponible para resolver dudas de negocio, precisar criterios de aceptación y renegociar el alcance táctico si emergen complejidades imprevistas.',
+      'Durante todo el ciclo del Sprint, el Product Owner acompaña a los Developers para resolver dudas funcionales, refinar criterios y renegociar alcance si surgen imprevistos, siendo además el único con autoridad para cancelar un Sprint si su objetivo queda obsoleto.',
     idsNodosNuevos: ['role-developers', 'artifact-sprint-backlog'],
     idsDestacados: ['role-product-owner', 'role-developers', 'artifact-sprint-backlog']
   },
@@ -52,7 +52,7 @@ export const capitulosHistoriaProductOwner: CapituloHistoria[] = [
     titulo: 'Inspección de Valor con Stakeholders',
     subtitulo: 'La Sprint Review',
     narrativa:
-      'En la Sprint Review, el Product Owner reúne a los clientes y partes interesadas para inspeccionar el Incremento completado. Recoge retroalimentación de primera mano y adapta el Product Backlog para guiar las decisiones de los futuros Sprints.',
+      'En la Sprint Review, el Product Owner colabora con los clientes y partes interesadas inspeccionando el Incremento utilizable que cumple la DoD, y adapta el orden del Product Backlog para los próximos Sprints.',
     idsNodosNuevos: ['event-sprint-review', 'artifact-increment'],
     idsDestacados: ['role-product-owner', 'event-sprint-review', 'artifact-increment']
   }

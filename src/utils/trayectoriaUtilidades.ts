@@ -101,19 +101,21 @@ export function construirRutaSmoothStepConDesvio({
   sourceY,
   targetX,
   targetY,
-  desvio = 0
+  desvio = 0,
+  offset = 0
 }: ParametrosRutaDesvio): string {
   const dx = targetX - sourceX;
   const dy = targetY - sourceY;
   const esHorizontal = Math.abs(dx) >= Math.abs(dy);
+  const desvioEfectivo = desvio !== 0 ? desvio : offset;
 
   if (esHorizontal) {
-    const yCentro = Math.round((sourceY + targetY) / 2 + desvio);
+    const yCentro = Math.round((sourceY + targetY) / 2 + desvioEfectivo);
     const c1X = Math.round(sourceX + dx * 0.35);
     const c2X = Math.round(sourceX + dx * 0.65);
     return `M ${sourceX} ${sourceY} C ${c1X} ${yCentro}, ${c2X} ${yCentro}, ${targetX} ${targetY}`;
   } else {
-    const xCentro = Math.round((sourceX + targetX) / 2 + desvio);
+    const xCentro = Math.round((sourceX + targetX) / 2 + desvioEfectivo);
     const c1Y = Math.round(sourceY + dy * 0.35);
     const c2Y = Math.round(sourceY + dy * 0.65);
     return `M ${sourceX} ${sourceY} C ${xCentro} ${c1Y}, ${xCentro} ${c2Y}, ${targetX} ${targetY}`;

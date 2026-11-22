@@ -1,6 +1,6 @@
 /**
- * Definición de los Artefactos oficiales y herramientas estratégicas de Scrum.
- * Carril Inferior: y = 520
+ * Definición de Prácticas Complementarias de Discovery y Artefactos Oficiales de Scrum 2020.
+ * Carril Inferior: y = 626
  */
 
 import type { NodoScrum } from '../types/scrum';
@@ -14,16 +14,16 @@ export const nodosArtefactos: NodoScrum[] = [
       id: 'artifact-vision-board',
       label: 'Product Vision Board',
       category: 'artifact',
-      summary: 'Marco visual estratégico que define el grupo objetivo, necesidades del usuario, propuesta de valor y metas del negocio.',
+      summary: 'Práctica estratégica (Pichler) que define público objetivo, necesidades críticas, propuesta de valor y metas del negocio.',
       akas: ['Tablero de Visión', 'Product Vision Canvas', 'Visión del Producto'],
       details: {
         inputs: ['Investigación de mercado', 'Entrevistas con clientes', 'Visión corporativa'],
         outputs: [
-          'Compromiso: Visión Clara del Producto',
-          'Fundamento conceptual del Product Goal y del Product Backlog inicial'
+          'Salida clave: Visión Clara del Producto',
+          'Fundamento estratégico que inspira el Product Goal y el Product Backlog inicial'
         ],
         theoreticalBasis:
-          'Desarrollado por Roman Pichler; actúa como la brújula estratégica que responde el "por qué" y "para quién" antes de iniciar la gestión del backlog.'
+          'Práctica complementaria de Roman Pichler (externa a la Guía Scrum oficial); actúa como brújula estratégica respondiendo el «por qué» y «para quién» antes de poblar el backlog.'
       }
     }
   },
@@ -35,16 +35,16 @@ export const nodosArtefactos: NodoScrum[] = [
       id: 'artifact-impact-mapping',
       label: 'Impact Mapping',
       category: 'artifact',
-      summary: 'Técnica gráfica colaborativa que conecta metas de negocio con el comportamiento de actores y los entregables necesarios.',
+      summary: 'Técnica gráfica colaborativa (Adzic) que conecta metas de negocio con cambios de comportamiento en actores y entregables.',
       akas: ['Mapeo de Impacto', 'Goal-Oriented Mapping', 'Adzic Mapping'],
       details: {
         inputs: ['Product Vision Board', 'Metas estratégicas de negocio', 'Investigación de usuarios'],
         outputs: [
-          'Compromiso: Hipótesis de Impacto Validadas',
-          'Insumos priorizados para actividades de usuario y entregables clave'
+          'Salida clave: Hipótesis de Impacto Validadas',
+          'Insumos priorizados para actividades de usuario y entregables medibles'
         ],
         theoreticalBasis:
-          'Desarrollado por Gojko Adzic; previene la trampa del feature-factory enfocando el esfuerzo únicamente en cambios de comportamiento medibles que mueven métricas de negocio.'
+          'Práctica complementaria de Gojko Adzic; previene la trampa del feature-factory enfocando el esfuerzo solo en cambios de comportamiento que mueven métricas de negocio.'
       }
     }
   },
@@ -56,16 +56,16 @@ export const nodosArtefactos: NodoScrum[] = [
       id: 'artifact-user-story-mapping',
       label: 'User Story Mapping',
       category: 'artifact',
-      summary: 'Estructura visual bidimensional que organiza las historias de usuario a lo largo del viaje del cliente (Backbone) y prioriza en Slices.',
+      summary: 'Mapa visual bidimensional (Patton) que ordena historias a lo largo del viaje del usuario (Backbone) y prioriza en Slices.',
       akas: ['Mapa de Historias', 'Story Map', 'Patton Map', 'User Journey Map'],
       details: {
         inputs: ['Impact Mapping', 'Entrevistas de usuario', 'Flujo de actividades clave'],
         outputs: [
-          'Compromiso: Rebanadas de Entrega (Slices)',
-          'Historias de usuario contextualizadas listas para el Product Backlog'
+          'Salida clave: Rebanadas de Entrega (Slices)',
+          'Historias de usuario contextualizadas listas para refinar en el Product Backlog'
         ],
         theoreticalBasis:
-          'Creado por Jeff Patton; erradica la pérdida de contexto del backlog plano organizando las historias a lo largo del viaje del usuario para planificar iteraciones con sentido completo.'
+          'Práctica complementaria de Jeff Patton; erradica la pérdida de contexto del backlog plano organizando las historias sobre el viaje completo del cliente.'
       }
     }
   },
@@ -77,16 +77,16 @@ export const nodosArtefactos: NodoScrum[] = [
       id: 'artifact-product-backlog',
       label: 'Product Backlog',
       category: 'artifact',
-      summary: 'Lista emergente y ordenada de todo lo que se sabe necesario para mejorar el producto, nutrida por el Story Map.',
+      summary: 'Lista emergente y ordenada de lo necesario para mejorar el producto; única fuente de trabajo del Scrum Team.',
       akas: ['PBL', 'Pila del Producto', 'Backlog del Producto', 'PBI List'],
       details: {
-        inputs: ['User Story Mapping', 'Visión estratégica', 'Feedback continuo del mercado'],
+        inputs: ['User Story Mapping', 'Product Vision Board', 'Feedback continuo de Sprint Review'],
         outputs: [
           'Compromiso: Product Goal (Objetivo del Producto)',
-          'Elementos del Product Backlog (PBI) refinados y ordenados'
+          'Elementos del Product Backlog (PBI) refinados y ordenados por valor'
         ],
         theoreticalBasis:
-          'Es la única fuente de trabajo emprendido por el Scrum Team. El Product Goal describe un estado futuro del producto que sirve como objetivo a largo plazo hacia el cual el equipo puede planificar.'
+          'Artefacto oficial de Scrum 2020. Es la única fuente de trabajo del Scrum Team; su compromiso es el Product Goal, objetivo a largo plazo contra el cual el equipo planifica.'
       }
     }
   },
@@ -98,16 +98,16 @@ export const nodosArtefactos: NodoScrum[] = [
       id: 'artifact-sprint-backlog',
       label: 'Sprint Backlog',
       category: 'artifact',
-      summary: 'Plan detallado por y para los Developers compuesto por el Sprint Goal, los PBI seleccionados y un plan accionable.',
+      summary: 'Plan creado por y para los Developers compuesto por el Sprint Goal (por qué), PBIs (qué) y plan de acción (cómo).',
       akas: ['SBL', 'Pila del Sprint', 'Backlog del Sprint', 'Plan del Sprint'],
       details: {
         inputs: ['Product Backlog priorizado', 'Capacidad del equipo', 'Definition of Done'],
         outputs: [
           'Compromiso: Sprint Goal (Objetivo del Sprint)',
-          'Plan detallado de entrega diaria de tareas de ingeniería'
+          'Plan táctico en tiempo real actualizado por los Developers durante el Sprint'
         ],
         theoreticalBasis:
-          'Es un pronóstico realizado por los Developers sobre el trabajo necesario para lograr el Sprint Goal. Es altamente visible y se actualiza a lo largo del Sprint a medida que se aprende más.'
+          'Artefacto oficial de Scrum 2020. Es una imagen en tiempo real, muy visible, del trabajo que los Developers planean realizar para lograr su compromiso: el Sprint Goal.'
       }
     }
   },
@@ -119,16 +119,16 @@ export const nodosArtefactos: NodoScrum[] = [
       id: 'artifact-increment',
       label: 'Increment',
       category: 'artifact',
-      summary: 'Un peldaño concreto hacia el Product Goal; utilizable de inmediato y validado con la Definition of Done.',
-      akas: ['Incremento de Producto', 'Entregable Terminado', 'PSPI (Potentially Shippable)'],
+      summary: 'Peldaño concreto, aditivo y utilizable hacia el Product Goal; nace al cumplir la Definition of Done.',
+      akas: ['Incremento Utilizable', 'Incremento de Producto', 'PSPI (término 2017)'],
       details: {
-        inputs: ['Tareas técnicas completadas', 'Criterios de aceptación satisfechos'],
+        inputs: ['PBIs completados', 'Verificación integrada y pruebas conformes a calidad'],
         outputs: [
           'Compromiso: Definition of Done (Definición de Terminado)',
-          'Software o solución operativa potencialmente desplegable a producción'
+          'Uno o varios incrementos utilizables y aditivos por Sprint'
         ],
         theoreticalBasis:
-          'En el momento en que un elemento del Product Backlog cumple la Definition of Done, nace un Incremento. Si un elemento no cumple la Definition of Done, no puede ser lanzado ni presentado en el Sprint Review.'
+          'Artefacto oficial de Scrum 2020. Pueden crearse múltiples Incrementos dentro de un Sprint y entregarse antes de la Sprint Review. Cada Incremento es aditivo a todos los anteriores y debe cumplir la Definition of Done.'
       }
     }
   }

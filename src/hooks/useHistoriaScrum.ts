@@ -1,15 +1,16 @@
 /**
  * Custom hook y lógica pura para gestionar la navegación guiada de la historia de Scrum.
- * Soporta múltiples modos temáticos ('general' y 'scrum-master').
+ * Soporta cuatro modos temáticos: 'general', 'scrum-master', 'product-owner' y 'developers'.
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import type { NodoScrum, AristaScrum } from '../types/scrum';
 import { capitulosHistoria, type CapituloHistoria } from '../data/datosHistoria';
 import { capitulosHistoriaScrumMaster } from '../data/datosHistoriaScrumMaster';
 import { capitulosHistoriaProductOwner } from '../data/datosHistoriaProductOwner';
+import { capitulosHistoriaDevelopers } from '../data/datosHistoriaDevelopers';
 
-export type TipoHistoria = 'general' | 'scrum-master' | 'product-owner';
+export type TipoHistoria = 'general' | 'scrum-master' | 'product-owner' | 'developers';
 
 /**
  * Filtra los nodos y aristas que deben ser visibles hasta el paso actual según la historia elegida.
@@ -34,7 +35,7 @@ export function calcularElementosVisiblesHistoria(
       ...nodo,
       data: {
         ...nodo.data,
-        opacity: idsFoco.has(nodo.id) ? 1.0 : 0.85,
+        opacity: idsFoco.has(nodo.id) ? 1.0 : 0.45,
         isSelected: idsFoco.has(nodo.id)
       }
     }));
@@ -54,6 +55,7 @@ export function useHistoriaScrum(todosLosNodos: NodoScrum[], todasLasAristas: Ar
   const capitulosActivos = useMemo(() => {
     if (tipoHistoria === 'scrum-master') return capitulosHistoriaScrumMaster;
     if (tipoHistoria === 'product-owner') return capitulosHistoriaProductOwner;
+    if (tipoHistoria === 'developers') return capitulosHistoriaDevelopers;
     return capitulosHistoria;
   }, [tipoHistoria]);
 
@@ -81,11 +83,27 @@ export function useHistoriaScrum(todosLosNodos: NodoScrum[], todasLasAristas: Ar
     setPasoActual((prev) => Math.max(prev - 1, 0));
   }, []);
 
-  const irAPaso = useCallback((paso: number) => {
-    if (paso >= 0 && paso < capitulosActivos.length) {
-      setPasoActual(paso);
-    }
-  }, [capitulosActivos.length]);
+  const irAPaso = useCallback(
+    (paso: number) => {
+      if (paso >= 0 && paso < capitulosActivos.length) {
+        setPasoActual(paso);
+      }
+    },
+    [capitulosActivos.length]
+  );
+
+  // Atajos de teclado accesibles (ArrowLeft / ArrowRight) en Modo Historia
+  useEffect(() => {
+    if (modoActivo !== 'historia') return;
+    const manejarTecla = (e: KeyboardEvent) => {
+      const etiqueta = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      if (etiqueta === 'input' || etiqueta === 'textarea' || etiqueta === 'select') return;
+      if (e.key === 'ArrowRight') siguientePaso();
+      if (e.key === 'ArrowLeft') anteriorPaso();
+    };
+    window.addEventListener('keydown', manejarTecla);
+    return () => window.removeEventListener('keydown', manejarTecla);
+  }, [modoActivo, siguientePaso, anteriorPaso]);
 
   return {
     pasoActual,

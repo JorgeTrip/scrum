@@ -51,29 +51,31 @@ export const ModalHistorialCambios: React.FC<PropsModalHistorial> = ({
       onClick={alCerrar}
     >
       <div
-        className="w-full max-w-2xl bg-[#1C1C1E] border border-zinc-700/80 rounded-2xl shadow-2xl overflow-hidden text-zinc-300 animate-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]"
+        className="w-full max-w-2xl bg-[var(--bg-panel)] border border-zinc-300 dark:border-zinc-700/80 rounded-2xl shadow-2xl overflow-hidden text-zinc-700 dark:text-zinc-300 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90dvh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabecera del Modal */}
-        <div className="flex items-center justify-between p-4 border-b border-zinc-800 bg-[#252528]/50 shrink-0">
+        <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-[#252528]/50 shrink-0">
           <div className="flex items-center gap-2.5">
             {alVolverAcercaDe && (
               <button
+                type="button"
                 onClick={alVolverAcercaDe}
                 title="Volver a Acerca de"
-                className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
+                aria-label="Volver a Acerca de"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
             )}
-            <div className="w-8 h-8 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+            <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-700 dark:text-indigo-400">
               <History className="w-4 h-4" />
             </div>
             <div>
-              <h2 id="titulo-historial" className="text-sm font-bold text-white tracking-tight">
+              <h2 id="titulo-historial" className="text-sm font-bold text-zinc-900 dark:text-white tracking-tight">
                 Historial de Cambios (Changelog)
               </h2>
-              <p className="text-[11px] text-zinc-400">
+              <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
                 {historial.length} actualizaciones registradas automáticamente
               </p>
             </div>
@@ -81,14 +83,14 @@ export const ModalHistorialCambios: React.FC<PropsModalHistorial> = ({
           <button
             onClick={alCerrar}
             aria-label="Cerrar historial"
-            className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Filtros y Búsqueda */}
-        <div className="p-3 border-b border-zinc-800 bg-zinc-900/60 flex flex-wrap gap-2 items-center justify-between shrink-0">
+        <div className="p-3 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 flex flex-wrap gap-2 items-center justify-between shrink-0">
           <div className="relative flex-1 min-w-[160px]">
             <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -96,7 +98,7 @@ export const ModalHistorialCambios: React.FC<PropsModalHistorial> = ({
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar en el historial..."
-              className="w-full bg-zinc-950/80 border border-zinc-700/60 rounded-lg pl-8 pr-3 py-1 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-white dark:bg-zinc-950/80 border border-zinc-300 dark:border-zinc-700/60 rounded-lg pl-8 pr-3 py-1 text-xs text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
           <div className="flex items-center gap-1 text-[11px]">
@@ -104,8 +106,8 @@ export const ModalHistorialCambios: React.FC<PropsModalHistorial> = ({
               <button
                 key={tipo}
                 onClick={() => setFiltroTipo(tipo)}
-                className={`px-2 py-0.5 rounded-md font-medium transition-all ${
-                  filtroTipo === tipo ? 'bg-indigo-600 text-white shadow-sm' : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
+                  filtroTipo === tipo ? 'bg-indigo-600 text-white shadow-sm' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
                 }`}
               >
                 {tipo === 'all' ? 'Todos' : tipo.toUpperCase()}
@@ -124,29 +126,29 @@ export const ModalHistorialCambios: React.FC<PropsModalHistorial> = ({
             cambiosFiltrados.map((item) => (
               <div
                 key={item.hash}
-                className="p-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800/80 hover:border-zinc-700 transition-colors flex items-start justify-between gap-3"
+                className="p-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors flex items-start justify-between gap-3"
               >
                 <div className="space-y-0.5 flex-1">
                   <div className="flex items-center gap-2">
                     <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded border ${
-                      item.tipo === 'feat' ? 'bg-indigo-950/60 text-indigo-300 border-indigo-500/30' :
-                      item.tipo === 'fix' ? 'bg-amber-950/60 text-amber-300 border-amber-500/30' :
-                      item.tipo === 'breaking' ? 'bg-red-950/60 text-red-300 border-red-500/30' :
-                      'bg-zinc-800 text-zinc-300 border-zinc-700'
+                      item.tipo === 'feat' ? 'bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border-indigo-500/30' :
+                      item.tipo === 'fix' ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30' :
+                      item.tipo === 'breaking' ? 'bg-red-500/15 text-red-800 dark:text-red-300 border-red-500/30' :
+                      'bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 border-zinc-300 dark:border-zinc-700'
                     }`}>
                       {item.tipo ?? 'commit'}
                     </span>
-                    <span className="text-[10px] text-zinc-400 font-mono">{item.fecha}</span>
+                    <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-mono">{item.fecha}</span>
                   </div>
-                  <p className="text-white text-xs font-medium leading-relaxed">{item.mensaje}</p>
-                  <p className="text-[10px] text-zinc-400">Por <strong className="text-zinc-300">{item.autor}</strong></p>
+                  <p className="text-zinc-900 dark:text-white text-xs font-medium leading-relaxed">{item.mensaje}</p>
+                  <p className="text-[10px] text-zinc-600 dark:text-zinc-400">Por <strong className="text-zinc-800 dark:text-zinc-300">{item.autor}</strong></p>
                 </div>
                 <a
                   href={`https://github.com/JorgeTrip/scrum/commit/${item.hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Ver commit en GitHub"
-                  className="flex items-center gap-1 font-mono text-[11px] text-indigo-400 hover:text-indigo-300 px-2 py-1 rounded bg-zinc-950 border border-zinc-800 shrink-0"
+                  className="flex items-center gap-1 font-mono text-[11px] text-indigo-700 dark:text-indigo-400 hover:underline px-2 py-1 rounded bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 shrink-0"
                 >
                   <span>{item.hash}</span>
                   <ExternalLink className="w-3 h-3" />
@@ -157,19 +159,19 @@ export const ModalHistorialCambios: React.FC<PropsModalHistorial> = ({
         </div>
 
         {/* Pie del Modal */}
-        <div className="p-3 border-t border-zinc-800 bg-[#252528]/40 flex items-center justify-between shrink-0">
+        <div className="p-3 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-100/60 dark:bg-[#252528]/40 flex items-center justify-between shrink-0">
           <a
             href="https://github.com/JorgeTrip/scrum"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
           >
             <span>Ver repositorio en GitHub</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
           <button
             onClick={alCerrar}
-            className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md transition-all active:scale-95"
+            className="px-3.5 min-h-[44px] rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md transition-all active:scale-95 cursor-pointer"
           >
             Cerrar
           </button>

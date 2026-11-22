@@ -5,9 +5,7 @@ import {
   useReactFlow,
   type EdgeProps
 } from '@xyflow/react';
-import {
-  construirRutaSmoothStepConDesvio
-} from '../../utils/trayectoriaUtilidades';
+import { construirRutaSmoothStepConDesvio } from '../../utils/trayectoriaUtilidades';
 import { useArrastreArista } from '../../hooks/useArrastreArista';
 import { GuiaDestinoArista } from './GuiaDestinoArista';
 
@@ -17,9 +15,8 @@ interface DatosAristaPersonalizada {
 }
 
 /**
- * Componente de arista con halo de despeje, arrastre magnético a lo largo de la trayectoria
- * y capacidad elástica de empujar la línea de relación hacia los lados o arriba/abajo.
- * Utiliza una única etiqueta que se levanta al presionar y acompaña al ratón hasta su destino.
+ * Arista personalizada con halo adaptativo al tema, arrastre magnético/elástico de etiqueta
+ * y detección de clic corto para abrir su explicación pedagógica y cita APA.
  */
 export const AristaDespejada: React.FC<EdgeProps> = ({
   id,
@@ -59,7 +56,6 @@ export const AristaDespejada: React.FC<EdgeProps> = ({
     screenToFlowPosition
   });
 
-  // Genera la trayectoria de la relación incorporando el desvío elástico perpendicular
   const edgePath = useMemo(() => {
     return construirRutaSmoothStepConDesvio({
       sourceX,
@@ -72,22 +68,27 @@ export const AristaDespejada: React.FC<EdgeProps> = ({
     });
   }, [sourceX, sourceY, targetX, targetY, desvioEfectivo, radioBorde, offsetPersonalizado]);
 
-  // Posición de la etiqueta: se eleva sutilmente al presionar y acompaña al ratón al arrastrar
   const renderX = estaArrastrando && cursorFlotante ? cursorFlotante.x : puntoBaseCurva.x;
-  const renderY = estaArrastrando && cursorFlotante
-    ? cursorFlotante.y
-    : estaPresionada
-    ? puntoBaseCurva.y - 3
-    : puntoBaseCurva.y;
+  const renderY =
+    estaArrastrando && cursorFlotante
+      ? cursorFlotante.y
+      : estaPresionada
+      ? puntoBaseCurva.y - 3
+      : puntoBaseCurva.y;
+
+  const inspeccionarArista = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.dispatchEvent(new CustomEvent('inspeccionar-arista-scrum', { detail: id }));
+  };
 
   return (
     <>
-      {/* Halo de corte de fondo para despegue visual */}
+      {/* Halo de corte de fondo adaptativo al tema */}
       <path
         ref={refRuta}
         d={edgePath}
         fill="none"
-        stroke="#121214"
+        stroke="var(--halo-arista, #121214)"
         strokeWidth={8}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -97,7 +98,16 @@ export const AristaDespejada: React.FC<EdgeProps> = ({
       {/* Línea principal coloreada */}
       <BaseEdge id={id} path={edgePath} style={style} markerEnd={markerEnd} />
 
-      {/* Punto de anclaje de destino conservado y guía elástica hacia la etiqueta */}
+      {/* Zona ampliada clicable sobre la línea para inspeccionar relación */}
+      <path
+        d={edgePath}
+        fill="none"
+        stroke="transparent"
+        strokeWidth={16}
+        onClick={inspeccionarArista}
+        className="cursor-pointer"
+      />
+
       {(estaArrastrando || estaPresionada) && destinoProyectado && (
         <GuiaDestinoArista
           puntoDestino={destinoProyectado}
@@ -105,7 +115,6 @@ export const AristaDespejada: React.FC<EdgeProps> = ({
         />
       )}
 
-      {/* Única etiqueta interactiva: se levanta al presionar y viaja con el puntero */}
       {label && (
         <EdgeLabelRenderer>
           <div
@@ -113,16 +122,18 @@ export const AristaDespejada: React.FC<EdgeProps> = ({
             onPointerMove={moverEtiqueta}
             onPointerUp={finalizarArrastreEtiqueta}
             onPointerCancel={finalizarArrastreEtiqueta}
+            onClick={(e) => e.stopPropagation()}
             style={{
               position: 'absolute',
               transform: `translate(-50%, -50%) translate(${renderX}px,${renderY}px)`,
-              pointerEvents: 'all'
+              pointerEvents: 'all',
+              opacity: style?.opacity ?? 1
             }}
-            title="Arrastra a lo largo para acomodarla, o perpendicularmente para empujar la línea de relación"
-            className={`nodrag nopan nowheel px-2.5 py-1 rounded-xl text-[10px] font-bold shadow-xl backdrop-blur-md whitespace-nowrap z-30 select-none transition-all duration-75 ${
+            title="Clic para ver explicación oficial | Arrastra para acomodar o empujar la línea"
+            className={`nodrag nopan nowheel px-2.5 py-1 rounded-xl text-[10px] font-bold shadow-lg backdrop-blur-md whitespace-nowrap z-30 select-none transition-all duration-75 ${
               estaArrastrando || estaPresionada
                 ? 'cursor-grabbing bg-indigo-600/95 text-white border-2 border-indigo-400 scale-105 shadow-2xl shadow-indigo-500/50'
-                : 'cursor-grab bg-[#1C1C1E]/95 hover:bg-[#252528] text-zinc-200 border border-zinc-700/80 hover:border-zinc-500'
+                : 'cursor-pointer bg-[var(--bg-panel)]/95 hover:bg-zinc-100 dark:hover:bg-[#252528] text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700/80 hover:border-indigo-400'
             }`}
           >
             {label}

@@ -87,7 +87,11 @@ export function useArrastreArista({
       superoUmbralRef.current = false;
       setEstaPresionada(true);
       setDestinoProyectado(puntoBaseCurva);
-      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+      } catch {
+        // Algunos eventos táctiles sintéticos no admiten captura directa
+      }
     },
     [puntoBaseCurva]
   );
@@ -131,6 +135,9 @@ export function useArrastreArista({
         };
         setEstadoArista(nuevoEstado);
         guardarEstadoEtiqueta(id, nuevoEstado);
+      } else if (!superoUmbralRef.current && inicioPointerRef.current) {
+        // Clic corto sin arrastre: abre el detalle pedagógico de la relación
+        window.dispatchEvent(new CustomEvent('inspeccionar-arista-scrum', { detail: id }));
       }
       setEstaPresionada(false);
       setEstaArrastrando(false);

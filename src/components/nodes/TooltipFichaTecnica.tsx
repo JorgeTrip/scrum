@@ -1,158 +1,152 @@
-import React from 'react';
-import { X, Clock, ArrowRightCircle, CheckCircle, BookOpen, Users, Calendar, Layers } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Users, Calendar, Layers, Compass } from 'lucide-react';
 import type { DatosNodoScrum, CategoriaScrum } from '../../types/scrum';
+import { contenidoEnriquecidoNodos } from '../../dominio/datos/contenidoEnriquecidoNodos';
+import { ejemplosEcommercePorNodo } from '../../dominio/datos/ejemplosEcommerce';
+import { PestanaTeoriaFicha } from './PestanaTeoriaFicha';
+import { PestanaMitosFicha } from './PestanaMitosFicha';
+import { PestanaEcommerceFicha } from './PestanaEcommerceFicha';
 
 interface TooltipFichaTecnicaProps {
   datos: DatosNodoScrum;
-  onCerrar: (e: React.MouseEvent) => void;
+  onCerrar?: (e: React.MouseEvent) => void;
+  /** Cuando true, omite el marco exterior y cabecera para embeberse dentro de HojaInferiorMovil */
+  sinMarcoExterno?: boolean;
 }
 
+type PestanaFicha = 'teoria' | 'mitos' | 'ecommerce';
+
 /**
- * Tooltip enriquecido con tipografía ampliada para máxima legibilidad.
- * Emerge directamente del nodo y aísla el scroll interno para no afectar el zoom.
+ * Tooltip enriquecido por pestañas (Teoría/APA, Mitos vs Realidad y Caso E-commerce).
+ * Aísla el scroll interno para no interferir con el zoom del lienzo.
  */
-export const TooltipFichaTecnica: React.FC<TooltipFichaTecnicaProps> = ({ datos, onCerrar }) => {
-  const { label, category, summary, details } = datos;
+export const TooltipFichaTecnica: React.FC<TooltipFichaTecnicaProps> = ({
+  datos,
+  onCerrar,
+  sinMarcoExterno = false
+}) => {
+  const [pestana, setPestana] = useState<PestanaFicha>('teoria');
+  const { id, label, category } = datos;
+  const extra = contenidoEnriquecidoNodos[id];
+  const ejemplo = ejemplosEcommercePorNodo[id];
+  const esDiscovery = extra?.origenMarco === 'discovery-complementario';
 
   const obtenerInfoCategoria = (cat: CategoriaScrum) => {
+    if (esDiscovery) {
+      return {
+        texto: 'Práctica Discovery',
+        icono: <Compass className="w-4 h-4 text-teal-600 dark:text-teal-400" />,
+        badge: 'bg-teal-500/15 text-teal-800 dark:text-teal-300 border-teal-500/40'
+      };
+    }
     switch (cat) {
       case 'role':
-        return { texto: 'Rol Scrum', icono: <Users className="w-4 h-4 text-amber-400" />, badge: 'bg-amber-500/15 text-amber-300 border-amber-500/40' };
+        return {
+          texto: 'Accountability / Rol',
+          icono: <Users className="w-4 h-4 text-amber-600 dark:text-amber-400" />,
+          badge: 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/40'
+        };
       case 'event':
-        return { texto: 'Ceremonia', icono: <Calendar className="w-4 h-4 text-indigo-400" />, badge: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/40' };
+        return {
+          texto: 'Evento Scrum',
+          icono: <Calendar className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />,
+          badge: 'bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border-indigo-500/40'
+        };
       case 'artifact':
-        return { texto: 'Artefacto', icono: <Layers className="w-4 h-4 text-emerald-400" />, badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40' };
+        return {
+          texto: 'Artefacto Oficial',
+          icono: <Layers className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />,
+          badge: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/40'
+        };
     }
   };
 
   const infoCat = obtenerInfoCategoria(category);
 
+  const selectorPestanas = (
+    <div
+      role="tablist"
+      className="flex items-center gap-1 p-1 mb-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
+    >
+      {[
+        { id: 'teoria', etiqueta: 'Teoría y APA' },
+        { id: 'mitos', etiqueta: 'Mitos vs Realidad' },
+        { id: 'ecommerce', etiqueta: 'Caso E-commerce' }
+      ].map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          role="tab"
+          aria-selected={pestana === tab.id}
+          onClick={() => setPestana(tab.id as PestanaFicha)}
+          className={`flex-1 px-2 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
+            sinMarcoExterno ? 'min-h-[44px] py-2' : 'py-1'
+          } ${
+            pestana === tab.id
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+          }`}
+        >
+          {tab.etiqueta}
+        </button>
+      ))}
+    </div>
+  );
+
+  const cuerpoPestana = (
+    <div
+      onWheel={(e) => e.stopPropagation()}
+      className={sinMarcoExterno ? 'pr-0.5' : 'nowheel max-h-[min(280px,38vh)] overflow-y-auto pr-1.5'}
+    >
+      {pestana === 'teoria' && <PestanaTeoriaFicha datos={datos} extra={extra} />}
+      {pestana === 'mitos' && <PestanaMitosFicha extra={extra} />}
+      {pestana === 'ecommerce' && <PestanaEcommerceFicha ejemplo={ejemplo} extra={extra} />}
+    </div>
+  );
+
+  if (sinMarcoExterno) {
+    return (
+      <div className="select-text text-zinc-900 dark:text-zinc-200">
+        <div
+          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${infoCat.badge} mb-2.5`}
+        >
+          {infoCat.icono}
+          <span>{infoCat.texto}</span>
+        </div>
+        {selectorPestanas}
+        {cuerpoPestana}
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}
       onWheel={(e) => e.stopPropagation()}
-      className="nowheel nopan nodrag w-96 md:w-[430px] max-w-[92vw] bg-[#1C1C1E]/98 backdrop-blur-2xl border border-zinc-700 rounded-2xl p-5 shadow-2xl shadow-black/90 text-zinc-200 select-text cursor-default animate-in fade-in zoom-in-95 duration-200"
+      className="nowheel nopan nodrag w-96 md:w-[440px] max-w-[92vw] bg-[var(--bg-panel)]/98 backdrop-blur-2xl border border-zinc-300 dark:border-zinc-700 rounded-2xl p-4 shadow-2xl shadow-black/40 dark:shadow-black/90 text-zinc-900 dark:text-zinc-200 select-text cursor-default animate-in fade-in zoom-in-95 duration-200"
     >
-      {/* Cabecera del Tooltip */}
-      <div className="flex items-start justify-between pb-3 mb-3 border-b border-zinc-800">
+      <div className="flex items-start justify-between pb-2.5 mb-2.5 border-b border-zinc-200 dark:border-zinc-800">
         <div>
-          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${infoCat.badge} mb-1.5`}>
+          <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${infoCat.badge} mb-1`}>
             {infoCat.icono}
             <span>{infoCat.texto}</span>
           </div>
-          <h4 className="text-base font-extrabold text-white tracking-tight">{label}</h4>
+          <h4 className="text-base font-extrabold text-zinc-900 dark:text-white tracking-tight">{label}</h4>
         </div>
-
-        <button
-          onClick={onCerrar}
-          aria-label="Cerrar ficha técnica"
-          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        {onCerrar && (
+          <button
+            type="button"
+            onClick={onCerrar}
+            aria-label="Cerrar ficha técnica"
+            className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      {/* Contenido desplazable con tipografía ampliada */}
-      <div
-        onWheel={(e) => e.stopPropagation()}
-        className="nowheel space-y-4 max-h-[min(260px,36vh)] overflow-y-auto pr-1.5 text-xs md:text-sm"
-      >
-        {/* Resumen Ejecutivo */}
-        <div>
-          <p className="text-xs md:text-sm text-zinc-200 leading-relaxed bg-zinc-900/70 p-3 rounded-xl border border-zinc-800/80">
-            {summary}
-          </p>
-        </div>
-
-        {/* Denominaciones alternativas (AKAs) */}
-        {datos.akas && datos.akas.length > 0 && (
-          <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
-            <span className="font-extrabold text-[11px] uppercase text-zinc-400 tracking-wider block mb-1.5">
-              También conocido como (AKA)
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {datos.akas.map((aka, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-xs text-zinc-200 font-medium"
-                >
-                  {aka}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Timebox si aplica */}
-        {details.timebox && (
-          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-indigo-950/30 border border-indigo-500/30 text-indigo-300 font-mono text-xs font-semibold">
-            <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
-            <span>{details.timebox}</span>
-          </div>
-        )}
-
-        {/* Responsabilidades */}
-        {details.responsibilities && details.responsibilities.length > 0 && (
-          <div>
-            <span className="font-extrabold text-xs uppercase text-zinc-300 tracking-wider block mb-1.5">
-              Responsabilidades Principales
-            </span>
-            <ul className="space-y-1.5">
-              {details.responsibilities.map((r, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-zinc-200 leading-relaxed bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
-                  <CheckCircle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                  <span>{r}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Insumos / Entradas */}
-        {details.inputs && details.inputs.length > 0 && (
-          <div>
-            <span className="font-extrabold text-xs uppercase text-zinc-300 tracking-wider block mb-1.5">
-              Entradas e Insumos
-            </span>
-            <div className="space-y-1.5">
-              {details.inputs.map((inp, i) => (
-                <div key={i} className="flex items-center gap-2 p-2 rounded-lg bg-zinc-900/40 border border-zinc-800/60 text-xs text-zinc-300">
-                  <ArrowRightCircle className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                  <span>{inp}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Salidas y Compromisos */}
-        {details.outputs && details.outputs.length > 0 && (
-          <div>
-            <span className="font-extrabold text-xs uppercase text-zinc-300 tracking-wider block mb-1.5">
-              Compromisos y Entregables
-            </span>
-            <div className="space-y-1.5">
-              {details.outputs.map((out, i) => (
-                <div key={i} className="p-2.5 rounded-xl bg-emerald-950/25 border border-emerald-500/35 text-emerald-300 text-xs font-medium flex items-start gap-2">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <span>{out}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Fundamentación Teórica */}
-        <div className="pt-1">
-          <span className="font-extrabold text-xs uppercase text-zinc-300 tracking-wider flex items-center gap-1.5 mb-1.5">
-            <BookOpen className="w-3.5 h-3.5 text-zinc-400" />
-            Guía Scrum
-          </span>
-          <blockquote className="p-3 rounded-xl bg-zinc-950/90 border-l-4 border-zinc-500 text-xs italic text-zinc-300 leading-relaxed">
-            "{details.theoreticalBasis}"
-          </blockquote>
-        </div>
-      </div>
+      {selectorPestanas}
+      {cuerpoPestana}
     </div>
   );
 };

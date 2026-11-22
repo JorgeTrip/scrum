@@ -22,5 +22,21 @@ describe('Componente ModalAcercaDe', () => {
     expect(html).toContain('Product Goal');
     expect(html).toContain('Developers');
     expect(html).toContain('Todos los derechos reservados');
+    expect(html).toContain('Entendido');
+    expect(html).not.toContain('>Comenzar<');
+  });
+
+  it('muestra el botón "Comenzar" en modo bienvenida manteniendo el contenido completo', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(ModalAcercaDe, {
+        abierto: true,
+        esBienvenida: true,
+        alCerrar: () => {}
+      })
+    );
+    expect(html).toContain('Guía Oficial de Scrum 2020');
+    expect(html).toContain('Jorge O. Tripodi');
+    expect(html).toContain('Comenzar');
+    expect(html).not.toContain('>Entendido<');
   });
 });

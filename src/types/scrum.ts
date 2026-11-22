@@ -49,6 +49,8 @@ export interface DatosNodoScrum extends Record<string, unknown> {
   isSelected?: boolean;
   /** Indica si el tooltip con la ficha técnica está visible emergiendo del nodo */
   estaAbiertoTooltip?: boolean;
+  /** Oculta el NodeToolbar flotante en viewport móvil para delegar en la hoja inferior */
+  ocultarToolbarEnNodo?: boolean;
 }
 
 export type NodoScrum = Node<DatosNodoScrum>;

@@ -1,6 +1,6 @@
 /**
- * Definición de los Eventos oficiales de Scrum (Ceremonias).
- * Carril Medio: y = 290
+ * Definición de los Eventos oficiales de Scrum (Guía 2020).
+ * Carril Medio alineado uniformemente en y = 257.
  */
 
 import type { NodoScrum } from '../types/scrum';
@@ -14,14 +14,14 @@ export const nodosEventos: NodoScrum[] = [
       id: 'event-sprint',
       label: 'Sprint',
       category: 'event',
-      summary: 'El corazón de Scrum; un contenedor de longitud fija donde se materializan ideas en valor tangible.',
-      akas: ['El Sprint', 'Iteración', 'Ciclo de Desarrollo', 'Timebox'],
+      summary: 'Contenedor de longitud fija donde las ideas se convierten en valor y ocurren todos los demás eventos.',
+      akas: ['El Sprint', 'Iteración', 'Contenedor Temporal', 'Timebox'],
       details: {
-        timebox: '1 a 4 semanas (duración constante durante el desarrollo).',
-        inputs: ['Product Backlog refinado', 'Visión del producto', 'Capacidad del equipo'],
-        outputs: ['Al menos un Incremento utilizable e inspeccionable con Definition of Done'],
+        timebox: 'Un mes o menos (1 a 4 semanas, duración constante).',
+        inputs: ['Product Backlog ordenado', 'Product Goal', 'Capacidad del Scrum Team'],
+        outputs: ['Uno o más Incrementos utilizables inspeccionables que cumplen la Definition of Done'],
         theoreticalBasis:
-          'Cada Sprint puede considerarse un proyecto corto. Permite predictibilidad al asegurar la inspección y adaptación del progreso hacia el Product Goal al menos una vez al mes.'
+          'Contiene al Planning, Daily, Review y Retrospective. Durante el Sprint no se hacen cambios que pongan en peligro el Sprint Goal, la calidad no disminuye y solo el Product Owner puede cancelarlo.'
       }
     }
   },
@@ -33,12 +33,12 @@ export const nodosEventos: NodoScrum[] = [
       id: 'event-sprint-planning',
       label: 'Sprint Planning',
       category: 'event',
-      summary: 'Evento que da inicio al Sprint definiendo el trabajo que se llevará a cabo durante su ciclo.',
+      summary: 'Evento que inicia el Sprint definiendo el trabajo a realizar de forma colaborativa por todo el Scrum Team.',
       akas: ['Planificación del Sprint', 'Planning', 'Reunión de Planificación'],
       details: {
         timebox: 'Máximo 8 horas para un Sprint de un mes (proporcionalmente menor para Sprints más breves).',
-        inputs: ['Product Backlog', 'Rendimiento pasado del equipo', 'Capacidad proyectada'],
-        outputs: ['Sprint Goal formalizado', 'Selección de PBI para el Sprint', 'Plan de ejecución inicial'],
+        inputs: ['Product Backlog (con Backlog Refinement continuo)', 'Capacidad proyectada', 'Definition of Done'],
+        outputs: ['Sprint Goal formalizado', 'Selección de PBI para el Sprint', 'Plan inicial de entrega'],
         theoreticalBasis:
           'Aborda tres temas esenciales: ¿Por qué es valioso este Sprint? (Sprint Goal), ¿Qué se puede hacer en este Sprint? y ¿Cómo se llevará a cabo el trabajo seleccionado?'
       }
@@ -53,13 +53,13 @@ export const nodosEventos: NodoScrum[] = [
       label: 'Daily Scrum',
       category: 'event',
       summary: 'Evento diario de 15 minutos para que los Developers inspeccionen el progreso hacia el Sprint Goal.',
-      akas: ['Daily Standup', 'Daily', 'Scrum Diario', 'Reunión Diaria'],
+      akas: ['Daily Standup', 'Daily', 'Scrum Diario'],
       details: {
-        timebox: '15 minutos diarios a la misma hora y en el mismo lugar.',
-        inputs: ['Sprint Backlog actual', 'Estado de las tareas en curso', 'Impedimentos emergentes'],
-        outputs: ['Sprint Backlog adaptado', 'Plan táctico de trabajo para las siguientes 24 horas'],
+        timebox: '15 minutos diarios fijos (sin importar duración del Sprint).',
+        inputs: ['Sprint Backlog actual', 'Avance hacia el Sprint Goal', 'Impedimentos emergentes'],
+        outputs: ['Sprint Backlog adaptado', 'Plan práctico para las próximas 24 horas'],
         theoreticalBasis:
-          'Mejora las comunicaciones, identifica impedimentos tempranos, promueve la rápida toma de decisiones y elimina la necesidad de otras reuniones innecesarias.'
+          'La Guía 2020 eliminó las 3 preguntas obligatorias: los Developers eligen cualquier estructura o técnica enfocada en el Sprint Goal. PO y SM solo participan como Developers si trabajan en ítems del Sprint Backlog.'
       }
     }
   },
@@ -71,33 +71,33 @@ export const nodosEventos: NodoScrum[] = [
       id: 'event-sprint-review',
       label: 'Sprint Review',
       category: 'event',
-      summary: 'Sesión colaborativa donde el Scrum Team y los interesados inspeccionan el resultado del Sprint.',
-      akas: ['Revisión del Sprint', 'Demo', 'Sprint Demo', 'Demostración'],
+      summary: 'Sesión colaborativa de trabajo donde el Scrum Team y los interesados inspeccionan el resultado del Sprint.',
+      akas: ['Revisión del Sprint', 'Demo (evitar formato pasivo)'],
       details: {
-        timebox: 'Máximo 4 horas para un Sprint de un mes.',
-        inputs: ['Incremento completado que cumple la Definition of Done', 'Cambios del mercado/negocio'],
-        outputs: ['Product Backlog adaptado con feedback fresco', 'Proyecciones de lanzamiento actualizadas'],
+        timebox: 'Máximo 4 horas para un Sprint de un mes (proporcionalmente menor para Sprints más breves).',
+        inputs: ['Incremento utilizable que cumple 100% la Definition of Done', 'Cambios del entorno y negocio'],
+        outputs: ['Product Backlog adaptado con feedback directo', 'Proyecciones compartidas de avance'],
         theoreticalBasis:
-          'Es una sesión de trabajo activa donde los asistentes colaboran sobre lo que se completó y lo que ha cambiado en el entorno de negocio para decidir qué hacer a continuación.'
+          'No es una mera presentación pasiva ni admite elementos sin terminar. Los asistentes colaboran sobre lo logrado y lo que cambió en el entorno para decidir qué sigue a continuación.'
       }
     }
   },
   {
     id: 'event-sprint-retrospective',
     type: 'eventNode',
-    position: { x: 2205, y: 262 },
+    position: { x: 2205, y: 257 },
     data: {
       id: 'event-sprint-retrospective',
       label: 'Sprint Retrospective',
       category: 'event',
-      summary: 'Espacio para que el Scrum Team inspeccione su desempeño y diseñe un plan de mejoras de calidad y efectividad.',
+      summary: 'Evento final del Sprint para planificar cómo aumentar la calidad y la efectividad del Scrum Team.',
       akas: ['Retrospectiva del Sprint', 'Retro', 'Sprint Retro'],
       details: {
-        timebox: 'Máximo 3 horas para un Sprint de un mes.',
-        inputs: ['Experiencia vivida durante el Sprint (personas, relaciones, procesos y herramientas)'],
-        outputs: ['Mejoras accionables priorizadas para ser implementadas en el siguiente Sprint'],
+        timebox: 'Máximo 3 horas para un Sprint de un mes (proporcionalmente menor para Sprints más breves).',
+        inputs: ['Último Sprint respecto a individuos, interacciones, procesos, herramientas y Definition of Done'],
+        outputs: ['Mejoras de mayor impacto priorizadas (incluso agregables al próximo Sprint Backlog)'],
         theoreticalBasis:
-          'Cierra el ciclo del Sprint actual fomentando la mejora continua. Se analizan qué salió bien, qué problemas surgieron y cómo se resolvieron o pueden resolverse mejor.'
+          'Cierra el Sprint analizando qué salió bien, qué problemas surgieron y cómo se resolvieron, incluyendo la revisión explícita de la Definition of Done para elevar continuamente la calidad.'
       }
     }
   }
